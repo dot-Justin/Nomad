@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  nomad:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - nomad-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - NOMAD_SECRET=${NOMAD_SECRET}
+      - PORT=3000
+    restart: unless-stopped
+
+volumes:
+  nomad-data:
