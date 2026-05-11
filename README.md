@@ -7,7 +7,7 @@ phones, tablets, and desktops.
 
 ## Requirements
 
-- Node.js 20+
+- Node.js 20+ (Tailwind v4's `@tailwindcss/oxide` native binding requires Node 20+)
 - tmux installed on target servers
 - SSH access to target servers
 - Docker (optional)
