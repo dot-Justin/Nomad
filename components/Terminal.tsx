@@ -59,6 +59,7 @@ export default function Terminal({
       allowProposedApi: true,
       macOptionIsMeta: true,
       convertEol: false,
+      logLevel: "off",
     });
 
     const fit = new FitAddon();

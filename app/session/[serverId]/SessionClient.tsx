@@ -153,12 +153,13 @@ export default function SessionClient({ serverId }: SessionClientProps) {
   }
 
   const killWindowConfirm = React.useCallback(() => {
+    const active = state.windows.find((w) => w.active);
     if (settings.confirm_kill_window === "true") {
       setConfirmKill(true);
     } else {
-      emit("kill:window");
+      emit("kill:window", { windowIndex: active?.index });
     }
-  }, [emit, settings.confirm_kill_window]);
+  }, [emit, settings.confirm_kill_window, state.windows]);
 
   const sessionTitle = state.attachedSession || "session";
 
@@ -212,8 +213,7 @@ export default function SessionClient({ serverId }: SessionClientProps) {
         windows={state.windows}
         onSelect={(w) => {
           if (!w.active) {
-            // tmux select-window via prefix + number
-            emit("terminal:input", { data: `\x02${w.index}` });
+            emit("select:window", { index: w.index });
           }
         }}
         onNew={() => emit("new:window")}
@@ -325,7 +325,8 @@ export default function SessionClient({ serverId }: SessionClientProps) {
             await updateSettings({ confirm_kill_window: "false" });
           }
           haptics.kill();
-          emit("kill:window");
+          const active = state.windows.find((w) => w.active);
+          emit("kill:window", { windowIndex: active?.index });
         }}
       />
     </div>
