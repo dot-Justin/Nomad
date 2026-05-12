@@ -92,13 +92,13 @@ export default function SettingsClient() {
   const scrollback = Number(settings.terminal_scrollback) || 5000;
 
   return (
-    <div className="relative min-h-screen pb-20">
+    <div className="relative min-h-[100dvh] pb-20">
 
       <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border/60 bg-background/85 px-3 pt-safe backdrop-blur">
         <button
           type="button"
           aria-label="Back"
-          onClick={() => router.push("/")}
+          onClick={() => router.back()}
           className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-accent"
         >
           <ArrowLeft weight="bold" size={20} />

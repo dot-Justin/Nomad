@@ -130,7 +130,7 @@ export function ActionBar({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 6 }}
                 transition={springs.bar}
-                whileTap={{ scale: 0.88 }}
+                whileTap={{ scale: 0.92 }}
                 onClick={b.onPress}
                 className={cn(
                   "flex h-12 w-12 flex-col items-center justify-center rounded-full text-muted-foreground touch-manipulation",

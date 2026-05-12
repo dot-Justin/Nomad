@@ -65,11 +65,9 @@ export default function HomeClient() {
   );
 
   return (
-    <div className="relative min-h-screen pb-32">
-
-      <div className="relative">
-        <NavBar />
-        <main className="mx-auto max-w-2xl px-5 pt-4">
+    <div className="relative min-h-[100dvh] pb-32">
+      <NavBar />
+      <main className="mx-auto max-w-2xl px-5 pt-4">
           <motion.h1
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -106,7 +104,6 @@ export default function HomeClient() {
             </motion.ul>
           )}
         </main>
-      </div>
 
       <Button
         size="icon"
