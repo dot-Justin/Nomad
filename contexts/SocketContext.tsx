@@ -17,6 +17,13 @@ export type TmuxWindow = {
   panes: number;
 };
 
+export type TmuxPane = {
+  index: number;
+  active: boolean;
+  width: number;
+  height: number;
+};
+
 export type SocketStatus =
   | "idle"
   | "connecting"
@@ -32,6 +39,7 @@ export type SocketState = {
   serverId: string | null;
   sessions: TmuxSession[];
   windows: TmuxWindow[];
+  panes: TmuxPane[];
   attachedSession: string | null;
   errorMessage: string | null;
 };
@@ -42,6 +50,8 @@ type SocketAction =
   | { type: "CONNECTED" }
   | { type: "SESSIONS_RECEIVED"; sessions: TmuxSession[] }
   | { type: "WINDOWS_RECEIVED"; windows: TmuxWindow[] }
+  | { type: "PANES_RECEIVED"; panes: TmuxPane[] }
+  | { type: "SESSION_RENAMED"; oldName: string; newName: string }
   | { type: "ATTACHED"; sessionName: string }
   | { type: "RECONNECTING" }
   | { type: "DISCONNECTED" }
@@ -53,6 +63,7 @@ const initialState: SocketState = {
   serverId: null,
   sessions: [],
   windows: [],
+  panes: [],
   attachedSession: null,
   errorMessage: null,
 };
@@ -86,6 +97,17 @@ function reducer(state: SocketState, action: SocketAction): SocketState {
         status: "attached",
         attachedSession: action.sessionName,
         errorMessage: null,
+      };
+    case "PANES_RECEIVED":
+      return { ...state, panes: action.panes };
+    case "SESSION_RENAMED":
+      return {
+        ...state,
+        attachedSession:
+          state.attachedSession === action.oldName ? action.newName : state.attachedSession,
+        sessions: state.sessions.map((s) =>
+          s.name === action.oldName ? { ...s, name: action.newName } : s
+        ),
       };
     case "RECONNECTING":
       return { ...state, status: "reconnecting" };
@@ -140,6 +162,14 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "ATTACHED", sessionName: payload?.sessionName })
     );
     socket.on("reconnecting", () => dispatch({ type: "RECONNECTING" }));
+    socket.on("panes:list", (payload: { panes: TmuxPane[] }) =>
+      dispatch({ type: "PANES_RECEIVED", panes: payload?.panes || [] })
+    );
+    socket.on("session:renamed", (payload: { oldName: string; newName: string }) => {
+      if (payload?.oldName && payload?.newName) {
+        dispatch({ type: "SESSION_RENAMED", oldName: payload.oldName, newName: payload.newName });
+      }
+    });
 
     return () => {
       socket.removeAllListeners();
