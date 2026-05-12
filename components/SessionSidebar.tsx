@@ -313,9 +313,9 @@ export function SessionSidebar({
             type="button"
             onClick={wrap(onNewWindow)}
             aria-label="New window"
-            className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
           >
-            <Plus weight="fill" size={10} />
+            <Plus weight="fill" size={11} />
           </button>
         </div>
         <div className="flex flex-col gap-0.5 overflow-y-auto">
@@ -377,10 +377,10 @@ export function SessionSidebar({
                         onKillWindow(w.index);
                       }
                     }}
-                    aria-label="Kill window"
-                    className="invisible ml-auto inline-flex h-4 w-4 items-center justify-center rounded-full text-destructive group-hover:visible"
+                    aria-label={`Kill window ${w.name || w.index}`}
+                    className="invisible ml-auto inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-destructive group-hover:visible"
                   >
-                    <X weight="bold" size={10} />
+                    <X weight="bold" size={11} />
                   </div>
                 </button>
               )}
@@ -405,6 +405,7 @@ export function SessionSidebar({
                 key={label}
                 type="button"
                 onClick={wrap(fn)}
+                aria-label={label}
                 className="flex flex-col items-center gap-0.5 rounded-xl py-2 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 <Icon weight="fill" size={15} />
