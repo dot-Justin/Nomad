@@ -72,7 +72,7 @@ export function ConfirmSheet({
               {confirmLabel}
             </Button>
             <Button
-              variant="ghost"
+              variant="outline"
               className="h-12 rounded-full"
               onClick={() => onOpenChange(false)}
             >
