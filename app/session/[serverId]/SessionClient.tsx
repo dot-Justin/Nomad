@@ -45,6 +45,8 @@ export default function SessionClient({ serverId }: SessionClientProps) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [confirmDetach, setConfirmDetach] = React.useState(false);
   const [confirmKill, setConfirmKill] = React.useState(false);
+  const [confirmKillSession, setConfirmKillSession] = React.useState(false);
+  const [killSessionName, setKillSessionName] = React.useState<string | null>(null);
   const [bottomOffset, setBottomOffset] = React.useState(0);
 
   const termApiRef = React.useRef<TermApi | null>(null);
@@ -297,6 +299,18 @@ export default function SessionClient({ serverId }: SessionClientProps) {
         attachedSession={state.attachedSession}
         onAttach={onAttach}
         onCreate={onCreate}
+        onKill={(name) => {
+          if (settings.confirm_kill_session === "true") {
+            setKillSessionName(name);
+            setConfirmKillSession(true);
+          } else {
+            haptics.kill();
+            emit("kill:session", { sessionName: name });
+          }
+        }}
+        onRename={(oldName, newName) => {
+          emit("rename:session", { oldName, newName });
+        }}
       />
 
       <ConfirmSheet
@@ -327,6 +341,25 @@ export default function SessionClient({ serverId }: SessionClientProps) {
           haptics.kill();
           const active = state.windows.find((w) => w.active);
           emit("kill:window", { windowIndex: active?.index });
+        }}
+      />
+
+      <ConfirmSheet
+        open={confirmKillSession}
+        onOpenChange={(open) => {
+          setConfirmKillSession(open);
+          if (!open) setKillSessionName(null);
+        }}
+        title="Kill session?"
+        message={`"${killSessionName}" and all its windows will be permanently closed.`}
+        confirmLabel="Kill Session"
+        onConfirm={async (skipNext) => {
+          if (skipNext && settings.confirm_kill_session === "true") {
+            await updateSettings({ confirm_kill_session: "false" });
+          }
+          haptics.kill();
+          if (killSessionName) emit("kill:session", { sessionName: killSessionName });
+          setKillSessionName(null);
         }}
       />
     </div>
