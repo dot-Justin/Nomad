@@ -45,7 +45,7 @@ export function ConfirmSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="px-5 pb-8 pt-6">
+      <SheetContent side="bottom" className="px-5 pb-8 pt-0" onDismiss={() => onOpenChange(false)}>
         <div className="mx-auto max-w-md space-y-4">
           <SheetTitle className="text-lg font-semibold">{title}</SheetTitle>
           {message ? <SheetDescription>{message}</SheetDescription> : null}

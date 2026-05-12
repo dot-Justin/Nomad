@@ -250,8 +250,9 @@ export function SessionSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="px-0 pb-8 pt-4 sm:max-w-lg sm:rounded-3xl"
+        className="px-0 pb-8 pt-0 sm:max-w-lg sm:rounded-3xl"
         aria-describedby={undefined}
+        onDismiss={() => onOpenChange(false)}
       >
         <SheetHeader className="px-5 pb-2">
           <SheetTitle className="text-lg font-semibold">Sessions</SheetTitle>
