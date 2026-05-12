@@ -49,6 +49,21 @@ export default function HomeClient() {
     [router, haptics]
   );
 
+  const onDelete = React.useCallback(
+    async (server: ServerSummary) => {
+      haptics.kill();
+      try {
+        const res = await fetch(`/api/servers/${server.id}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("Failed to delete server");
+        await refresh();
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "Failed to delete server";
+        toast.error(msg);
+      }
+    },
+    [haptics, refresh]
+  );
+
   return (
     <div className="relative min-h-screen pb-32">
       <div
@@ -83,6 +98,7 @@ export default function HomeClient() {
                     server={server}
                     onTap={onTap}
                     onEdit={setEditing}
+                    onDelete={onDelete}
                   />
                 ))}
               </AnimatePresence>
