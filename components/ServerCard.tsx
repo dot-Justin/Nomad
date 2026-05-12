@@ -103,7 +103,7 @@ export function ServerCard({ server, onTap, onEdit, onDelete }: ServerCardProps)
       {/* Delete background */}
       <motion.div
         aria-hidden
-        className="absolute inset-0 flex items-center justify-end rounded-2xl bg-destructive pr-5"
+        className="pointer-events-none absolute inset-0 flex items-center justify-end rounded-2xl bg-destructive pr-5"
         style={{ opacity: deleteOpacity }}
       >
         <motion.div style={{ scale: deleteScale }} className="flex flex-col items-center gap-0.5">
