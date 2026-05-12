@@ -219,6 +219,10 @@ export default function SessionClient({ serverId }: SessionClientProps) {
           }
         }}
         onNew={() => emit("new:window")}
+        onKillWindow={(index) => emit("kill:window", { windowIndex: index })}
+        onRenameWindow={(index, name) =>
+          emit("rename:window", { index, name })
+        }
       />
 
       <div className="relative flex-1 px-3 pb-28">
