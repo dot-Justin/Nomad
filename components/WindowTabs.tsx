@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { springs } from "@/lib/animations";
 import { Input } from "@/components/ui/input";
 import type { TmuxWindow } from "@/contexts/SocketContext";
+import { useLongPress } from "@/hooks/useLongPress";
 
 type WindowTabsProps = {
   windows: TmuxWindow[];
@@ -17,42 +18,16 @@ type WindowTabsProps = {
   onRenameWindow?: (index: number, name: string) => void;
 };
 
-function useLongPress(callback: () => void, delay = 500) {
-  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const start = React.useCallback(() => {
-    timerRef.current = setTimeout(callback, delay);
-  }, [callback, delay]);
-
-  const cancel = React.useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  return {
-    onMouseDown: start,
-    onMouseUp: cancel,
-    onMouseLeave: cancel,
-    onTouchStart: start,
-    onTouchEnd: cancel,
-    onTouchCancel: cancel,
-  };
-}
-
 type WindowTabProps = {
   w: TmuxWindow;
   isContext: boolean;
   isRenaming: boolean;
   renameValue: string;
   onSelect: () => void;
-  onLongPress: () => void;
-  onStartRename: () => void;
+  onLongPress: (rect: DOMRect) => void;
   onCommitRename: () => void;
   onRenameChange: (v: string) => void;
   onCancelRename: () => void;
-  onKill: () => void;
 };
 
 function WindowTab({
@@ -62,13 +37,18 @@ function WindowTab({
   renameValue,
   onSelect,
   onLongPress,
-  onStartRename,
   onCommitRename,
   onRenameChange,
   onCancelRename,
-  onKill,
 }: WindowTabProps) {
-  const longPressProps = useLongPress(onLongPress);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
+
+  const longPressCallback = React.useCallback(() => {
+    const rect = buttonRef.current?.getBoundingClientRect();
+    if (rect) onLongPress(rect);
+  }, [onLongPress]);
+
+  const { handlers: longPressHandlers, consumeLongPress } = useLongPress(longPressCallback);
 
   return (
     <div className="relative shrink-0">
@@ -91,15 +71,13 @@ function WindowTab({
         </div>
       ) : (
         <button
+          ref={buttonRef}
           type="button"
-          onClick={() => {
-            if (isContext) {
-              onSelect();
-            } else {
-              onSelect();
-            }
+          onClick={(e) => {
+            if (consumeLongPress()) { e.stopPropagation(); return; }
+            onSelect();
           }}
-          {...longPressProps}
+          {...longPressHandlers}
           className={cn(
             "relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition-colors",
             w.active ? "text-primary" : "text-muted-foreground hover:text-foreground",
@@ -132,43 +110,6 @@ function WindowTab({
           ) : null}
         </button>
       )}
-
-      <AnimatePresence>
-        {isContext && !isRenaming ? (
-          <motion.div
-            key="ctx"
-            initial={{ opacity: 0, y: -4, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.95 }}
-            transition={springs.quick}
-            className="absolute left-0 top-full z-50 mt-1 flex min-w-[120px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg"
-          >
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onStartRename();
-              }}
-              className="flex items-center gap-2 px-3 py-2.5 text-xs font-medium hover:bg-accent"
-            >
-              <PencilSimple weight="fill" size={13} />
-              Rename
-            </button>
-            <div className="h-px bg-border/60" />
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onKill();
-              }}
-              className="flex items-center gap-2 px-3 py-2.5 text-xs font-medium text-destructive hover:bg-accent"
-            >
-              <Trash weight="fill" size={13} />
-              Kill
-            </button>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
     </div>
   );
 }
@@ -181,6 +122,7 @@ export function WindowTabs({
   onRenameWindow,
 }: WindowTabsProps) {
   const [contextWindow, setContextWindow] = React.useState<number | null>(null);
+  const [contextPos, setContextPos] = React.useState<{ x: number; y: number } | null>(null);
   const [renamingWindow, setRenamingWindow] = React.useState<number | null>(null);
   const [renameValue, setRenameValue] = React.useState("");
 
@@ -195,54 +137,103 @@ export function WindowTabs({
     [renameValue, onRenameWindow]
   );
 
+  const dismissContext = React.useCallback(() => {
+    setContextWindow(null);
+    setContextPos(null);
+    setRenamingWindow(null);
+  }, []);
+
   if (!windows || windows.length === 0) {
     return null;
   }
 
+  const contextWin = windows.find((w) => w.index === contextWindow);
+
   return (
-    <div
-      className="scrollbar-hide flex items-center gap-1 overflow-x-auto px-4 py-2"
-      onClick={() => {
-        setContextWindow(null);
-        setRenamingWindow(null);
-      }}
-    >
-      {windows.map((w) => (
-        <WindowTab
-          key={w.index}
-          w={w}
-          isContext={contextWindow === w.index}
-          isRenaming={renamingWindow === w.index}
-          renameValue={renameValue}
-          onSelect={() => {
-            setContextWindow(null);
-            if (!w.active) onSelect(w);
-          }}
-          onLongPress={() => {
-            setContextWindow((prev) => (prev === w.index ? null : w.index));
-          }}
-          onStartRename={() => {
-            setContextWindow(null);
-            setRenamingWindow(w.index);
-            setRenameValue(w.name || "");
-          }}
-          onCommitRename={() => commitRename(w.index)}
-          onRenameChange={setRenameValue}
-          onCancelRename={() => setRenamingWindow(null)}
-          onKill={() => {
-            setContextWindow(null);
-            onKillWindow?.(w.index);
-          }}
-        />
-      ))}
-      <button
-        type="button"
-        onClick={onNew}
-        aria-label="New window"
-        className="ml-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
+    <>
+      <div
+        className="scrollbar-hide flex items-center gap-1 overflow-x-auto px-4 py-2"
+        onClick={dismissContext}
       >
-        <Plus weight="fill" size={14} />
-      </button>
-    </div>
+        {windows.map((w) => (
+          <WindowTab
+            key={w.index}
+            w={w}
+            isContext={contextWindow === w.index}
+            isRenaming={renamingWindow === w.index}
+            renameValue={renameValue}
+            onSelect={() => {
+              setContextWindow(null);
+              setContextPos(null);
+              if (!w.active) onSelect(w);
+            }}
+            onLongPress={(rect) => {
+              if (contextWindow === w.index) {
+                setContextWindow(null);
+                setContextPos(null);
+              } else {
+                setContextWindow(w.index);
+                setContextPos({ x: rect.left, y: rect.bottom + 4 });
+              }
+            }}
+            onCommitRename={() => commitRename(w.index)}
+            onRenameChange={setRenameValue}
+            onCancelRename={() => setRenamingWindow(null)}
+          />
+        ))}
+        <button
+          type="button"
+          onClick={onNew}
+          aria-label="New window"
+          className="ml-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
+        >
+          <Plus weight="fill" size={14} />
+        </button>
+      </div>
+
+      {/* Context menu rendered outside overflow container via fixed positioning */}
+      <AnimatePresence>
+        {contextWindow !== null && contextPos && contextWin && renamingWindow !== contextWindow ? (
+          <motion.div
+            key="ctx"
+            initial={{ opacity: 0, y: -4, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4, scale: 0.95 }}
+            transition={springs.quick}
+            style={{ position: "fixed", left: contextPos.x, top: contextPos.y }}
+            className="z-50 flex min-w-[120px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg"
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setContextWindow(null);
+                setContextPos(null);
+                setRenamingWindow(contextWindow);
+                setRenameValue(contextWin.name || "");
+              }}
+              className="flex items-center gap-2 px-3 py-2.5 text-xs font-medium hover:bg-accent"
+            >
+              <PencilSimple weight="fill" size={13} />
+              Rename
+            </button>
+            <div className="h-px bg-border/60" />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setContextWindow(null);
+                setContextPos(null);
+                onKillWindow?.(contextWindow);
+              }}
+              className="flex items-center gap-2 px-3 py-2.5 text-xs font-medium text-destructive hover:bg-accent"
+            >
+              <Trash weight="fill" size={13} />
+              Kill
+            </button>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </>
   );
 }

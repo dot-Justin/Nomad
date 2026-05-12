@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import type { TmuxSession } from "@/contexts/SocketContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useHaptics } from "@/hooks/useHaptics";
+import { useLongPress } from "@/hooks/useLongPress";
 
 type SessionSheetProps = {
   open: boolean;
@@ -40,32 +41,6 @@ function relativeFromUnix(seconds: number) {
   const d = Math.floor(h / 24);
   if (d < 7) return `${d}d ago`;
   return new Date(ms).toLocaleString();
-}
-
-function useLongPress(callback: () => void, delay = 500) {
-  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const start = React.useCallback(() => {
-    timerRef.current = setTimeout(() => {
-      callback();
-    }, delay);
-  }, [callback, delay]);
-
-  const cancel = React.useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  return {
-    onMouseDown: start,
-    onMouseUp: cancel,
-    onMouseLeave: cancel,
-    onTouchStart: start,
-    onTouchEnd: cancel,
-    onTouchCancel: cancel,
-  };
 }
 
 type SessionRowProps = {
@@ -104,20 +79,17 @@ function SessionRow({
   const isContext = contextSession === s.name;
   const isRenaming = renamingSession === s.name;
 
-  const longPressProps = useLongPress(onLongPress);
+  const { handlers: longPressHandlers, consumeLongPress } = useLongPress(onLongPress);
 
   return (
     <li>
       <button
         type="button"
         onClick={() => {
-          if (isContext) {
-            onTap();
-            return;
-          }
+          if (consumeLongPress()) return;
           onTap();
         }}
-        {...longPressProps}
+        {...longPressHandlers}
         className={cn(
           "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors hover:bg-accent",
           recent && !isContext && "bg-accent/60",
