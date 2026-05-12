@@ -8,6 +8,7 @@ import { SearchAddon } from "@xterm/addon-search";
 
 import "@xterm/xterm/css/xterm.css";
 
+import { toast } from "sonner";
 import { useSocket } from "@/hooks/useSocket";
 import { useSettings } from "@/hooks/useSettings";
 import { getTerminalTheme } from "@/lib/terminalThemes";
@@ -103,6 +104,20 @@ export default function Terminal({
       emit("terminal:input", { data });
     });
 
+    let selectionCopyTimer: ReturnType<typeof setTimeout> | null = null;
+    const onSelection = term.onSelectionChange(() => {
+      if (selectionCopyTimer) clearTimeout(selectionCopyTimer);
+      selectionCopyTimer = setTimeout(() => {
+        const text = term.getSelection();
+        if (!text) return;
+        navigator.clipboard?.writeText(text).then(() => {
+          toast.success("Copied to clipboard", { duration: 1500 });
+        }).catch(() => {
+          // Clipboard API unavailable (non-HTTPS or denied)
+        });
+      }, 300);
+    });
+
     const offOutput = on("terminal:output", ((payload: { data: string }) => {
       try {
         const binary = atob(payload.data);
@@ -130,7 +145,9 @@ export default function Terminal({
       observer.disconnect();
       window.visualViewport?.removeEventListener("resize", onViewport);
       if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
+      if (selectionCopyTimer) clearTimeout(selectionCopyTimer);
       onData.dispose();
+      onSelection.dispose();
       offOutput();
       try {
         term.dispose();
