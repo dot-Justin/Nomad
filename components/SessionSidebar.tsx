@@ -23,6 +23,7 @@ import { springs } from "@/lib/animations";
 import { Input } from "@/components/ui/input";
 import type { TmuxSession, TmuxWindow } from "@/contexts/SocketContext";
 import { useHaptics } from "@/hooks/useHaptics";
+import { useSettings } from "@/hooks/useSettings";
 
 type SessionSidebarProps = {
   sessions: TmuxSession[];
@@ -200,8 +201,9 @@ export function SessionSidebar({
   onScrollExit,
 }: SessionSidebarProps) {
   const haptics = useHaptics();
+  const { settings } = useSettings();
   const [creating, setCreating] = React.useState(false);
-  const [newName, setNewName] = React.useState("nomad");
+  const [newName, setNewName] = React.useState("");
   const [renamingWindow, setRenamingWindow] = React.useState<number | null>(null);
   const [windowRenameVal, setWindowRenameVal] = React.useState("");
 
@@ -291,7 +293,7 @@ export function SessionSidebar({
                 if (e.key === "Escape") setCreating(false);
               }}
               autoFocus
-              placeholder="session name"
+              placeholder={settings.default_session_name || "nomad"}
               className="h-7 flex-1 rounded-lg border-input bg-muted px-2 text-xs shadow-none"
             />
             <button
@@ -320,7 +322,10 @@ export function SessionSidebar({
         ) : (
           <button
             type="button"
-            onClick={() => setCreating(true)}
+            onClick={() => {
+              setNewName(settings.default_session_name || "nomad");
+              setCreating(true);
+            }}
             className="mt-1 flex w-full items-center gap-2 rounded-xl px-2.5 py-2 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
           >
             <Plus weight="fill" size={12} />
