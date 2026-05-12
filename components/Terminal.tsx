@@ -85,8 +85,11 @@ export default function Terminal({
       }
     };
 
-    safeFit();
-    term.focus();
+    // Defer initial fit to next frame so renderer has laid out
+    requestAnimationFrame(() => {
+      safeFit();
+      term.focus();
+    });
 
     onTermReady?.({
       findNext: (q: string) => search.findNext(q),

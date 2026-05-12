@@ -92,6 +92,7 @@ export function EditServerSheet({
         <SheetContent
           side="bottom"
           className="max-h-[92vh] overflow-y-auto px-5 pb-10 pt-6 sm:max-w-lg sm:rounded-3xl"
+          aria-describedby={undefined}
         >
           <SheetHeader className="mb-4 mt-2">
             <SheetTitle className="text-xl font-semibold">Edit Server</SheetTitle>

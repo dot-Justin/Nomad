@@ -30,6 +30,7 @@ export function BottomSheet({
       <SheetContent
         side="bottom"
         className={cn("px-5 pb-8 pt-6 sm:max-w-lg sm:rounded-3xl", className)}
+        aria-describedby={undefined}
       >
         {title ? (
           <SheetHeader className="mb-4 mt-2">
