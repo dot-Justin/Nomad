@@ -50,7 +50,7 @@ export default function Terminal({
       (settings.terminal_cursor_style as "block" | "underline" | "bar") || "block";
 
     const term = new XTerm({
-      fontFamily: settings.terminal_font_family || "JetBrains Mono",
+      fontFamily: `${settings.terminal_font_family || "JetBrains Mono"}, Symbols Nerd Font Mono`,
       fontSize,
       cursorStyle,
       cursorBlink,
@@ -104,11 +104,10 @@ export default function Terminal({
 
     const offOutput = on("terminal:output", ((payload: { data: string }) => {
       try {
-        const decoded =
-          typeof window !== "undefined" && typeof window.atob === "function"
-            ? window.atob(payload.data)
-            : Buffer.from(payload.data, "base64").toString("binary");
-        term.write(decoded);
+        const binary = atob(payload.data);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        term.write(bytes);
       } catch {
         // ignore decoding failure
       }
