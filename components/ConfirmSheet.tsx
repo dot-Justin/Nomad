@@ -56,7 +56,7 @@ export function ConfirmSheet({
                 checked={skip}
                 onCheckedChange={(v) => setSkip(v === true)}
               />
-              <span>Don&apos;t ask again for this action</span>
+              <span>Don&apos;t ask again</span>
             </Label>
           ) : null}
 

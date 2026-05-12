@@ -152,7 +152,7 @@ export function WindowTabs({
   return (
     <>
       <div
-        className="scrollbar-hide flex items-center gap-1 overflow-x-auto px-4 py-2"
+        className="scrollbar-hide flex items-center gap-1 overflow-x-auto border-b border-border/60 px-4 py-2"
         onClick={dismissContext}
       >
         {windows.map((w) => (
