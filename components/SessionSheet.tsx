@@ -92,8 +92,8 @@ function SessionRow({
         {...longPressHandlers}
         className={cn(
           "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors hover:bg-accent",
-          recent && !isContext && "bg-accent/60",
-          attached && "border-l-4 border-primary pl-2",
+          recent && !isContext && !attached && "bg-accent/60",
+          attached && "bg-primary/10 font-medium text-primary",
           isContext && "bg-accent"
         )}
       >

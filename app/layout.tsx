@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { ThemeProvider } from "@/contexts/ThemeProvider";
@@ -11,11 +11,6 @@ import "./globals.css";
 const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-});
-
-const fontSerif = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
 });
 
 const fontMono = JetBrains_Mono({
@@ -43,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
+        className={`${fontSans.variable} ${fontMono.variable} antialiased`}
       >
         <ThemeProvider>
           <SettingsProvider>

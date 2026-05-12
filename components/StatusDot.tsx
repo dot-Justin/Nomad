@@ -29,7 +29,7 @@ export function StatusDot({ online, className, pulse = true }: StatusDotProps) {
       <span
         className={cn(
           "relative inline-block h-2.5 w-2.5 rounded-full",
-          online ? "bg-primary shadow-[0_0_8px_rgba(255,95,0,0.6)]" : "bg-muted-foreground/40"
+          online ? "bg-primary" : "bg-muted-foreground/40"
         )}
       />
     </span>

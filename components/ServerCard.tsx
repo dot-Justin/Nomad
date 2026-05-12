@@ -149,22 +149,22 @@ export function ServerCard({ server, onTap, onEdit, onDelete }: ServerCardProps)
               {server.port !== 22 ? `:${server.port}` : ""}
             </div>
           </div>
-          <div className="flex items-center gap-2 text-right text-[11px] text-muted-foreground">
-            <div>
-              <div className="leading-none">{relativeTime(server.last_connected)}</div>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit(server);
-                }}
-                aria-label="Edit server"
-                className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
-              >
-                <PencilSimple weight="fill" size={14} />
-              </button>
+          <div className="flex flex-col items-end gap-1 text-right text-[11px] text-muted-foreground">
+            <div className="flex items-center gap-1 leading-none">
+              <span>{relativeTime(server.last_connected)}</span>
+              <CaretRight weight="fill" size={12} />
             </div>
-            <CaretRight weight="fill" size={14} />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(server);
+              }}
+              aria-label="Edit server"
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              <PencilSimple weight="fill" size={13} />
+            </button>
           </div>
         </Card>
       </motion.div>
