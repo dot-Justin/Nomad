@@ -232,7 +232,7 @@ export default function SessionClient({ serverId }: SessionClientProps) {
             </button>
             <div className="min-w-0">
               <div className="truncate text-sm font-semibold">{sessionTitle}</div>
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              <div className="text-xs text-muted-foreground">
                 {humanStatus(state.status)}
               </div>
             </div>
