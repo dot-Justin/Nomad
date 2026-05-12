@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type StatusDotProps = {
@@ -10,12 +10,14 @@ type StatusDotProps = {
 };
 
 export function StatusDot({ online, className, pulse = true }: StatusDotProps) {
+  const reduced = useReducedMotion();
+
   return (
     <span
       aria-hidden
       className={cn("relative inline-flex items-center justify-center", className)}
     >
-      {online && pulse ? (
+      {online && pulse && !reduced ? (
         <motion.span
           className="absolute inline-block rounded-full bg-primary"
           style={{ width: 10, height: 10 }}

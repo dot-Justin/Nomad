@@ -74,9 +74,14 @@ export default function HomeClient() {
       <div className="relative">
         <NavBar />
         <main className="mx-auto max-w-2xl px-5 pt-4">
-          <h1 className="mb-6 text-3xl font-bold tracking-tight text-foreground">
+          <motion.h1
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 26, delay: 0.05 }}
+            className="mb-6 text-3xl font-bold tracking-tight text-foreground"
+          >
             Servers
-          </h1>
+          </motion.h1>
 
           {loading ? (
             <div className="mt-20 flex justify-center text-muted-foreground">
