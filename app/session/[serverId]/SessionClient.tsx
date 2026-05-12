@@ -282,11 +282,17 @@ export default function SessionClient({ serverId }: SessionClientProps) {
         </div>
 
         <div className="relative flex-1 px-3 pb-28 md:pb-4">
-          {state.status === "connecting" || state.status === "idle" ? (
+          {state.status !== "attached" && state.status !== "reconnecting" ? (
             <div className="flex h-full items-center justify-center text-muted-foreground">
               <div className="flex flex-col items-center gap-4">
                 <ConnectingRings size={56} />
-                <span className="text-sm font-medium">Connecting…</span>
+                <span className="text-sm font-medium">
+                  {state.status === "session_picking"
+                    ? "Choose a session"
+                    : state.status === "connected"
+                    ? "Loading sessions…"
+                    : "Connecting…"}
+                </span>
               </div>
             </div>
           ) : (

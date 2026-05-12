@@ -106,14 +106,15 @@ export function EditServerSheet({
               submitLabel="Save Changes"
               credentialPlaceholder="••••••••  (leave blank to keep)"
               extraFooter={
-                <Button
-                  variant="destructive"
-                  className="mt-3 h-12 w-full rounded-full"
-                  onClick={requestDelete}
-                  type="button"
-                >
-                  Delete Server
-                </Button>
+                <div className="mt-6 flex justify-center border-t border-border/40 pt-4">
+                  <button
+                    type="button"
+                    onClick={requestDelete}
+                    className="text-sm text-destructive/70 underline-offset-4 hover:text-destructive hover:underline"
+                  >
+                    Delete server
+                  </button>
+                </div>
               }
             />
           ) : null}

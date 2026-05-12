@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUp,
+  Check,
   MagnifyingGlass,
   PencilSimple,
   Plus,
@@ -290,6 +291,28 @@ export function SessionSidebar({
               placeholder="session name"
               className="h-7 flex-1 rounded-lg border-input bg-muted px-2 text-xs shadow-none"
             />
+            <button
+              type="button"
+              aria-label="Create session"
+              disabled={!newName}
+              onClick={() => {
+                if (!newName) return;
+                haptics.confirm();
+                onCreate(newName);
+                setCreating(false);
+              }}
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground disabled:opacity-40"
+            >
+              <Check weight="bold" size={12} />
+            </button>
+            <button
+              type="button"
+              aria-label="Cancel"
+              onClick={() => setCreating(false)}
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent"
+            >
+              <X weight="bold" size={12} />
+            </button>
           </div>
         ) : (
           <button
