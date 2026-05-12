@@ -161,6 +161,20 @@ function SidebarSessionRow({
   );
 }
 
+function humanStatus(status: string): string {
+  switch (status) {
+    case "idle": return "Ready";
+    case "connecting": return "Connecting…";
+    case "connected": return "Connected";
+    case "session_picking": return "Pick a session";
+    case "attached": return "Attached";
+    case "reconnecting": return "Reconnecting…";
+    case "disconnected": return "Disconnected";
+    case "error": return "Error";
+    default: return status;
+  }
+}
+
 export function SessionSidebar({
   sessions,
   windows,
@@ -208,14 +222,14 @@ export function SessionSidebar({
     { icon: ArrowLeft, label: "Prev", fn: onPrevWindow },
     { icon: ArrowRight, label: "Next", fn: onNextWindow },
     { icon: TextAlignLeft, label: "Scroll", fn: onScrollMode },
-    { icon: SignOut, label: "Detach", fn: onDetach, destructive: true },
+    { icon: SignOut, label: "Detach", fn: onDetach },
   ] as const;
 
   const scrollActions = [
     { icon: ArrowUp, label: "Up", fn: onScrollUp },
     { icon: ArrowDown, label: "Down", fn: onScrollDown },
     { icon: MagnifyingGlass, label: "Find", fn: onScrollFind },
-    { icon: X, label: "Exit", fn: onScrollExit, accent: true },
+    { icon: X, label: "Exit", fn: onScrollExit },
   ] as const;
 
   const actions = mode === "scroll" ? scrollActions : defaultActions;
@@ -225,7 +239,7 @@ export function SessionSidebar({
       {/* Status */}
       <div className="border-b border-border/60 px-4 py-3">
         <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-          {status}
+          {humanStatus(status)}
         </div>
         <div className="truncate text-sm font-semibold text-foreground">
           {attachedSession || "—"}
@@ -348,18 +362,26 @@ export function SessionSidebar({
                   {w.panes > 1 ? (
                     <span className="mr-1 text-[10px] text-muted-foreground">{w.panes}p</span>
                   ) : null}
-                  <button
-                    type="button"
+                  <div
+                    role="button"
+                    tabIndex={0}
                     onClick={(e) => {
                       e.stopPropagation();
                       haptics.kill();
                       onKillWindow(w.index);
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.stopPropagation();
+                        haptics.kill();
+                        onKillWindow(w.index);
+                      }
+                    }}
                     aria-label="Kill window"
                     className="invisible ml-auto inline-flex h-4 w-4 items-center justify-center rounded-full text-destructive group-hover:visible"
                   >
                     <X weight="bold" size={10} />
-                  </button>
+                  </div>
                 </button>
               )}
             </div>
@@ -378,20 +400,12 @@ export function SessionSidebar({
             transition={springs.quick}
             className="grid grid-cols-4 gap-1"
           >
-            {actions.map(({ icon: Icon, label, fn, ...flags }) => (
+            {actions.map(({ icon: Icon, label, fn }) => (
               <button
                 key={label}
                 type="button"
                 onClick={wrap(fn)}
-                className={cn(
-                  "flex flex-col items-center gap-0.5 rounded-xl py-2 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
-                  "destructive" in flags &&
-                    flags.destructive &&
-                    "text-destructive hover:bg-destructive/10 hover:text-destructive",
-                  "accent" in flags &&
-                    flags.accent &&
-                    "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                )}
+                className="flex flex-col items-center gap-0.5 rounded-xl py-2 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 <Icon weight="fill" size={15} />
                 {label}

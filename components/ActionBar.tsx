@@ -67,12 +67,12 @@ export function ActionBar({
   };
 
   const defaultButtons: ActionButton[] = [
-    { key: "new", icon: Plus, label: "New", onPress: wrap(onNewWindow) },
+    { key: "new", icon: Plus, label: "Window", onPress: wrap(onNewWindow) },
     {
       key: "kill",
       icon: X,
       iconWeight: "bold",
-      label: "Kill",
+      label: "Kill Win",
       onPress: wrap(onKillWindow),
       destructive: true,
     },
@@ -102,7 +102,6 @@ export function ActionBar({
       iconWeight: "bold",
       label: "Exit",
       onPress: wrap(onScrollExit),
-      accent: true,
     },
   ];
 

@@ -23,6 +23,20 @@ import { useHaptics } from "@/hooks/useHaptics";
 
 const Terminal = dynamic(() => import("@/components/Terminal"), { ssr: false });
 
+function humanStatus(status: string): string {
+  switch (status) {
+    case "idle": return "Ready";
+    case "connecting": return "Connecting…";
+    case "connected": return "Connected";
+    case "session_picking": return "Pick a session";
+    case "attached": return "Attached";
+    case "reconnecting": return "Reconnecting…";
+    case "disconnected": return "Disconnected";
+    case "error": return "Error";
+    default: return status;
+  }
+}
+
 type SessionClientProps = {
   serverId: string;
 };
@@ -219,7 +233,7 @@ export default function SessionClient({ serverId }: SessionClientProps) {
             <div className="min-w-0">
               <div className="truncate text-sm font-semibold">{sessionTitle}</div>
               <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                {state.status}
+                {humanStatus(state.status)}
               </div>
             </div>
           </div>
@@ -237,7 +251,7 @@ export default function SessionClient({ serverId }: SessionClientProps) {
             </button>
             <button
               type="button"
-              aria-label="Disconnect"
+              aria-label="Detach"
               onClick={requestDetach}
               className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
             >
