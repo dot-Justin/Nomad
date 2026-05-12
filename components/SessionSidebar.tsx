@@ -219,11 +219,14 @@ export function SessionSidebar({
     [windowRenameVal, onRenameWindow]
   );
 
+  const isAttached = status === "attached" || status === "reconnecting";
+  const detachLabel = isAttached ? "Detach" : "Cancel";
+
   const defaultActions = [
     { icon: ArrowLeft, label: "Prev", fn: onPrevWindow },
     { icon: ArrowRight, label: "Next", fn: onNextWindow },
     { icon: TextAlignLeft, label: "Scroll", fn: onScrollMode },
-    { icon: SignOut, label: "Detach", fn: onDetach },
+    { icon: SignOut, label: detachLabel, fn: onDetach },
   ] as const;
 
   const scrollActions = [
@@ -336,7 +339,8 @@ export function SessionSidebar({
             type="button"
             onClick={wrap(onNewWindow)}
             aria-label="New window"
-            className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
+            disabled={!isAttached}
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
           >
             <Plus weight="fill" size={11} />
           </button>
@@ -423,18 +427,23 @@ export function SessionSidebar({
             transition={springs.quick}
             className="grid grid-cols-4 gap-1"
           >
-            {actions.map(({ icon: Icon, label, fn }) => (
-              <button
-                key={label}
-                type="button"
-                onClick={wrap(fn)}
-                aria-label={label}
-                className="flex flex-col items-center gap-0.5 rounded-xl py-2 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                <Icon weight="fill" size={15} />
-                {label}
-              </button>
-            ))}
+            {actions.map(({ icon: Icon, label, fn }) => {
+              const disableWhenDetached = label !== detachLabel && mode !== "scroll";
+              const isDisabled = !isAttached && disableWhenDetached;
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={wrap(fn)}
+                  aria-label={label}
+                  disabled={isDisabled}
+                  className="flex flex-col items-center gap-0.5 rounded-xl py-2 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                >
+                  <Icon weight="fill" size={15} />
+                  {label}
+                </button>
+              );
+            })}
           </motion.div>
         </AnimatePresence>
       </div>
