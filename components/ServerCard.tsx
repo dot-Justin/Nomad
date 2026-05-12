@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { CaretRight, Trash } from "@phosphor-icons/react";
+import { CaretRight, PencilSimple, Trash } from "@phosphor-icons/react";
 
 import { Card } from "@/components/ui/card";
 import { StatusDot } from "@/components/StatusDot";
@@ -108,7 +108,7 @@ export function ServerCard({ server, onTap, onEdit, onDelete }: ServerCardProps)
       >
         <motion.div style={{ scale: deleteScale }} className="flex flex-col items-center gap-0.5">
           <Trash weight="fill" size={20} className="text-destructive-foreground" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-destructive-foreground">
+          <span className="text-[10px] font-semibold text-destructive-foreground">
             Delete
           </span>
         </motion.div>
@@ -158,9 +158,10 @@ export function ServerCard({ server, onTap, onEdit, onDelete }: ServerCardProps)
                   e.stopPropagation();
                   onEdit(server);
                 }}
-                className="mt-1 text-[10px] uppercase tracking-widest text-primary/80 hover:text-primary"
+                aria-label="Edit server"
+                className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
               >
-                Edit
+                <PencilSimple weight="fill" size={14} />
               </button>
             </div>
             <CaretRight weight="fill" size={14} />

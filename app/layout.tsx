@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Playfair_Display, JetBrains_Mono } from "next/font/google";
+import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { ThemeProvider } from "@/contexts/ThemeProvider";
@@ -8,9 +8,8 @@ import { SocketProvider } from "@/contexts/SocketContext";
 
 import "./globals.css";
 
-const fontSans = Poppins({
+const fontSans = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
 });
 

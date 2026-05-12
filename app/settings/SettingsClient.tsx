@@ -40,7 +40,7 @@ const TERMINAL_THEMES = [
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="mx-2 mb-2 mt-6 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+    <h3 className="px-1 pb-1.5 pt-6 text-xs font-semibold text-muted-foreground">
       {children}
     </h3>
   );
@@ -93,10 +93,6 @@ export default function SettingsClient() {
 
   return (
     <div className="relative min-h-screen pb-20">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 topo-bg text-primary opacity-[0.035] dark:opacity-[0.045] md:opacity-[0.06]"
-      />
 
       <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border/60 bg-background/85 px-3 pt-safe backdrop-blur">
         <button
@@ -304,7 +300,7 @@ export default function SettingsClient() {
         <SectionHeader>About</SectionHeader>
         <Group>
           <Row label="Version" description="Nomad">
-            <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
               0.1.0
             </span>
           </Row>
@@ -319,9 +315,9 @@ export default function SettingsClient() {
             </a>
           </Row>
           <Row label="Reset" description="Restore default settings">
-            <Button
-              variant="destructive"
-              className="h-9 rounded-full px-4"
+            <button
+              type="button"
+              className="text-sm text-destructive/70 underline-offset-4 hover:text-destructive hover:underline"
               onClick={async () => {
                 await update({
                   default_session_name: "nomad",
@@ -343,7 +339,7 @@ export default function SettingsClient() {
               }}
             >
               Reset
-            </Button>
+            </button>
           </Row>
         </Group>
       </main>

@@ -66,10 +66,6 @@ export default function HomeClient() {
 
   return (
     <div className="relative min-h-screen pb-32">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 topo-bg text-primary opacity-[0.035] dark:opacity-[0.045] md:opacity-[0.06]"
-      />
 
       <div className="relative">
         <NavBar />
@@ -119,7 +115,7 @@ export default function HomeClient() {
           haptics.tap();
           setAddOpen(true);
         }}
-        className="fixed bottom-8 right-5 z-40 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-orange"
+        className="fixed bottom-8 right-5 z-40 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-md"
         style={{ marginBottom: "env(safe-area-inset-bottom)" }}
       >
         <Plus weight="fill" size={24} />

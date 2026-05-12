@@ -14,7 +14,7 @@ export function EmptyState({ onAdd }: { onAdd?: () => void }) {
         Add your first server to start exploring.
       </p>
       {onAdd ? (
-        <Button onClick={onAdd} className="mt-6 h-11 rounded-full px-6 shadow-orange">
+        <Button onClick={onAdd} className="mt-6 h-11 rounded-full px-6">
           Add Server
         </Button>
       ) : null}

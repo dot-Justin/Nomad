@@ -242,7 +242,7 @@ export function SessionSidebar({
     <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border/60 bg-card">
       {/* Status */}
       <div className="border-b border-border/60 px-4 py-3">
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <div className="text-[11px] font-semibold text-muted-foreground">
           {humanStatus(status)}
         </div>
         <div className="truncate text-sm font-semibold text-foreground">
@@ -252,7 +252,7 @@ export function SessionSidebar({
 
       {/* Sessions */}
       <div className="border-b border-border/60 px-2 py-2">
-        <div className="mb-1 px-2.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <div className="mb-1 px-2.5 text-[11px] font-semibold text-muted-foreground">
           Sessions
         </div>
         <div className="flex flex-col gap-0.5">
@@ -332,7 +332,7 @@ export function SessionSidebar({
       {/* Windows */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-2 py-2">
         <div className="mb-1 flex items-center justify-between px-2.5">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+          <span className="text-[11px] font-semibold text-muted-foreground">
             Windows
           </span>
           <button

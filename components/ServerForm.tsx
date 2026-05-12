@@ -30,7 +30,7 @@ type ServerFormProps = {
 };
 
 const inputClass =
-  "h-12 rounded-xl border-input bg-muted px-4 text-sm shadow-none focus-visible:ring-ring";
+  "h-12 rounded-xl border-input bg-muted px-4 text-sm shadow-none focus-visible:ring-1 focus-visible:ring-ring";
 
 export function ServerForm({
   initial,
@@ -73,7 +73,7 @@ export function ServerForm({
   return (
     <div className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="srv-name" className="text-xs uppercase tracking-wider text-muted-foreground">
+        <Label htmlFor="srv-name" className="text-sm font-medium text-foreground">
           Display Name
         </Label>
         <Input
@@ -88,7 +88,7 @@ export function ServerForm({
 
       <div className="grid grid-cols-[1fr_84px] gap-3">
         <div className="space-y-1.5">
-          <Label htmlFor="srv-host" className="text-xs uppercase tracking-wider text-muted-foreground">
+          <Label htmlFor="srv-host" className="text-sm font-medium text-foreground">
             Hostname or IP
           </Label>
           <div className="relative">
@@ -104,7 +104,7 @@ export function ServerForm({
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="srv-port" className="text-xs uppercase tracking-wider text-muted-foreground">
+          <Label htmlFor="srv-port" className="text-sm font-medium text-foreground">
             Port
           </Label>
           <Input
@@ -119,7 +119,7 @@ export function ServerForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="srv-user" className="text-xs uppercase tracking-wider text-muted-foreground">
+        <Label htmlFor="srv-user" className="text-sm font-medium text-foreground">
           Username
         </Label>
         <div className="relative">
@@ -136,7 +136,7 @@ export function ServerForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label className="text-xs uppercase tracking-wider text-muted-foreground">
+        <Label className="text-sm font-medium text-foreground">
           Authentication
         </Label>
         <SegmentedControl
@@ -165,7 +165,7 @@ export function ServerForm({
 
       {authType === "password" ? (
         <div className="space-y-1.5">
-          <Label htmlFor="srv-pass" className="text-xs uppercase tracking-wider text-muted-foreground">
+          <Label htmlFor="srv-pass" className="text-sm font-medium text-foreground">
             Password
           </Label>
           <div className="relative">
@@ -194,7 +194,7 @@ export function ServerForm({
         </div>
       ) : (
         <div className="space-y-1.5">
-          <Label htmlFor="srv-key" className="text-xs uppercase tracking-wider text-muted-foreground">
+          <Label htmlFor="srv-key" className="text-sm font-medium text-foreground">
             Private Key
           </Label>
           <Textarea
@@ -211,7 +211,7 @@ export function ServerForm({
         type="button"
         onClick={handleSubmit}
         disabled={!valid || saving}
-        className="h-13 w-full rounded-full shadow-orange disabled:shadow-none"
+        className="h-12 w-full rounded-full"
       >
         {saving ? <Spinner /> : submitLabel}
       </Button>

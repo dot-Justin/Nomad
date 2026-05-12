@@ -127,7 +127,7 @@ function SessionRow({
         )}
         {!isRenaming && (
           <>
-            <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-primary">
+            <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-1 text-[10px] font-medium text-primary">
               <StackSimple weight="fill" size={10} /> {s.windows}
             </span>
             <CaretRight weight="fill" size={14} className="text-muted-foreground" />
