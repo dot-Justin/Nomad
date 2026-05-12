@@ -12,7 +12,7 @@ import { WindowTabs } from "@/components/WindowTabs";
 import { SessionSheet } from "@/components/SessionSheet";
 import { ConfirmSheet } from "@/components/ConfirmSheet";
 import { ReconnectBanner } from "@/components/ReconnectBanner";
-import { Spinner } from "@/components/Spinner";
+import { ConnectingRings } from "@/components/ConnectingRings";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -228,9 +228,9 @@ export default function SessionClient({ serverId }: SessionClientProps) {
       <div className="relative flex-1 px-3 pb-28">
         {state.status === "connecting" || state.status === "idle" ? (
           <div className="flex h-full items-center justify-center text-muted-foreground">
-            <div className="flex flex-col items-center gap-3">
-              <Spinner size={28} />
-              <span className="text-sm">Connecting…</span>
+            <div className="flex flex-col items-center gap-4">
+              <ConnectingRings size={56} />
+              <span className="text-sm font-medium">Connecting…</span>
             </div>
           </div>
         ) : (
