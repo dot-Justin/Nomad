@@ -183,15 +183,20 @@ export default function SettingsClient() {
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 rounded-full"
+                disabled={fontSize <= 10}
                 onClick={() => set({ terminal_font_size: String(Math.max(10, fontSize - 1)) })}
               >
                 –
               </Button>
-              <span className="w-8 text-center text-sm font-medium">{fontSize}</span>
+              <span className="w-14 text-center text-sm font-medium tabular-nums">
+                {fontSize}
+                <span className="ml-1 text-xs text-muted-foreground">px</span>
+              </span>
               <Button
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 rounded-full"
+                disabled={fontSize >= 20}
                 onClick={() => set({ terminal_font_size: String(Math.min(20, fontSize + 1)) })}
               >
                 +
@@ -234,17 +239,20 @@ export default function SettingsClient() {
             />
           </Row>
           <Row label="Scrollback Lines">
-            <Input
-              type="number"
-              min={1000}
-              max={50000}
-              defaultValue={scrollback}
-              onBlur={(e) => {
-                const next = Math.max(1000, Math.min(50000, Number(e.target.value) || 5000));
-                set({ terminal_scrollback: String(next) });
-              }}
-              className="h-9 w-28 rounded-xl border-input bg-muted text-right text-sm shadow-none"
-            />
+            <div className="flex flex-col items-end gap-0.5">
+              <Input
+                type="number"
+                min={1000}
+                max={50000}
+                defaultValue={scrollback}
+                onBlur={(e) => {
+                  const next = Math.max(1000, Math.min(50000, Number(e.target.value) || 5000));
+                  set({ terminal_scrollback: String(next) });
+                }}
+                className="h-9 w-28 rounded-xl border-input bg-muted text-right text-sm shadow-none"
+              />
+              <span className="text-[10px] text-muted-foreground">1,000 – 50,000</span>
+            </div>
           </Row>
           <Row label="Terminal Theme">
             <Select
