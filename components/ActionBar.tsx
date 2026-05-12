@@ -72,7 +72,7 @@ export function ActionBar({
       key: "kill",
       icon: X,
       iconWeight: "bold",
-      label: "Kill Win",
+      label: "Kill",
       onPress: wrap(onKillWindow),
       destructive: true,
     },

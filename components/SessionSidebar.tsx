@@ -389,26 +389,18 @@ export function SessionSidebar({
                   {w.panes > 1 ? (
                     <span className="mr-1 text-[10px] text-muted-foreground">{w.panes}p</span>
                   ) : null}
-                  <div
-                    role="button"
-                    tabIndex={0}
+                  <button
+                    type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       haptics.kill();
                       onKillWindow(w.index);
                     }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.stopPropagation();
-                        haptics.kill();
-                        onKillWindow(w.index);
-                      }
-                    }}
                     aria-label={`Kill window ${w.name || w.index}`}
                     className="invisible ml-auto inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-destructive group-hover:visible"
                   >
                     <X weight="bold" size={11} />
-                  </div>
+                  </button>
                 </button>
               )}
             </div>
