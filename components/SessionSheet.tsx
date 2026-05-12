@@ -186,7 +186,7 @@ function SessionRow({
             className="flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium text-destructive hover:bg-background/60"
           >
             <Trash weight="fill" size={15} />
-            Kill
+            Kill Session
           </button>
         </div>
       )}

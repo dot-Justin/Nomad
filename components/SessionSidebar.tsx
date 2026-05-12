@@ -128,7 +128,7 @@ function SidebarSessionRow({
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium text-destructive hover:bg-background/60"
               >
                 <Trash weight="fill" size={12} />
-                Kill
+                Kill Session
               </button>
             </div>
           </motion.div>
